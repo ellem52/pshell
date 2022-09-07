@@ -1,3 +1,4 @@
+<#.7 Year Project Date with formatting for RoboCopy #>
 $date = (Get-Date).addDays(-2555)
-$7date = ‘{0:yyyyMMdd}’ -f [DateTime]$date
+$7date = â€˜{0:yyyyMMdd}â€™ -f [DateTime]$date
 echo $7date
