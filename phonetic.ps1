@@ -1,54 +1,42 @@
-# Danny's rewrite of phonetic.pl 03162022
-do {
-$str = 	read-host "Enter letters & numbers"
-	write-host "`nPhonetically: `n"
+# NATO Phonetic Alphabet Converter
+# Converts letters and numerals to NATO phonetic equivalents
 
-foreach ($char in [char[]]$str) {
-    switch ($char) {
-        a {"alpha"}
-        b {"bravo"}
-        c {"charlie"}
-        d {"delta"}
-        e {"echo"}
-        f {"foxtrot"}
-        g {"golf"}
-        h {"hotel"}
-        i {"india"}
-        j {"juliet"}
-        k {"kilo"}
-        l {"lima"}
-        m {"mike"}
-        n {"november"}
-        o {"oscar"}
-        p {"papa"}
-        q {"quebec"}
-        r {"romeo"}
-        s {"sierra"}
-        t {"tango"}
-        u {"uniform"}
-        v {"victor"}
-        w {"whiskey"}
-        x {"xray"}
-        y {"yankee"}
-        z {"zulu"}
-        1 {"one"}
-        2 {"two"}
-        3 {"tree"}
-        4 {"four"}
-        5 {"fife"}
-        6 {"six"}
-        7 {"seven"}
-        8 {"eight"}
-        9 {"niner"}
-        0 {"zero"}
-        " " {"`n"}
-
-        default { $char }
-     }
+$nato = @{
+    'A' = 'Alpha';   'B' = 'Bravo';    'C' = 'Charlie'; 'D' = 'Delta';
+    'E' = 'Echo';    'F' = 'Foxtrot';  'G' = 'Golf';    'H' = 'Hotel';
+    'I' = 'India';   'J' = 'Juliet';   'K' = 'Kilo';    'L' = 'Lima';
+    'M' = 'Mike';    'N' = 'November'; 'O' = 'Oscar';   'P' = 'Papa';
+    'Q' = 'Quebec';  'R' = 'Romeo';    'S' = 'Sierra';  'T' = 'Tango';
+    'U' = 'Uniform'; 'V' = 'Victor';   'W' = 'Whiskey'; 'X' = 'X-ray';
+    'Y' = 'Yankee';  'Z' = 'Zulu';
+    '0' = 'Zero';    '1' = 'One';      '2' = 'Two';     '3' = 'Tree';
+    '4' = 'Four';    '5' = 'Fife';     '6' = 'Six';     '7' = 'Seven';
+    '8' = 'Eight';   '9' = 'Niner'
 }
 
-# pause
+function Convert-ToNato {
+    param([string]$Text)
 
-$continue = read-host "`nWould you like to enter more Letters & Numbers: Y or N"
-	    }
-while ($continue -eq "y" -or $continue -eq "yes")
+    $results = foreach ($char in [char[]]$Text) {
+        $key = "$char".ToUpper()
+        if ($key -eq ' ') {
+            ''  # blank line between words
+        } elseif ($nato.ContainsKey($key)) {
+            '{0,-10} = {1}' -f $char, $nato[$key]
+        } else {
+            '{0,-10} = (not converted)' -f $char
+        }
+    }
+    $results
+}
+
+do {
+    $input = Read-Host "`nEnter text to convert"
+
+    Write-Host "`nNATO Phonetic:`n" -ForegroundColor Cyan
+    Convert-ToNato -Text $input | ForEach-Object { Write-Host $_ }
+
+    $continue = Read-Host "`nConvert more text? (Y/N)"
+} while ($continue -match '^[Yy]')
+
+Write-Host "`nDone." -ForegroundColor Green
